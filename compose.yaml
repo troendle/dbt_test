@@ -31,7 +31,8 @@ services:
     environment:
       PYTHONUNBUFFERED: "1"
       DBT_UI__FRONTEND_URL: http://localhost:8080
-      DBT_UI__SCHEDULER_ENABLED: "false"
+      DBT_UI__SCHEDULER_ENABLED: "true"
+      DBT_UI__SCHEDULER_DATA_DIR: /home/dbtui/git-repos/.dbt-ui/scheduler
       DBT_UI__METADV_ENABLED: "false"
       DBT_POSTGRES_HOST: postgres
       DBT_SEND_ANONYMOUS_USAGE_STATS: "false"
@@ -40,12 +41,14 @@ services:
       - -ec
       - |
         export DBT_ENV_SECRET_POSTGRES_PASSWORD="$$(cat /run/secrets/postgres_password)"
+        export DBT_UI__SCHEDULER_ENCRYPTION_KEY="$$(cat /run/secrets/scheduler_key)"
         exec python main.py
     volumes:
       - dbt_ui_repos:/home/dbtui/git-repos
       - ./:/home/dbtui/git-repos/dbt_test
     secrets:
       - postgres_password
+      - scheduler_key
     depends_on:
       postgres:
         condition: service_healthy
@@ -78,3 +81,5 @@ volumes:
 secrets:
   postgres_password:
     file: ./.postgres-password
+  scheduler_key:
+    file: ./.scheduler-key

@@ -60,11 +60,23 @@ its data. `docker compose up -d --wait` starts it again. Do not use
 The workspace also runs [dbt UI](https://github.com/data-diving/dbt-ui), an
 independent community application, not an official dbt product.
 
-From the workspace root:
+Before the first UI startup, generate a private scheduler encryption key from
+the workspace root (do not replace an existing key):
+
+```bash
+(umask 077; set -o noclobber -o pipefail; openssl rand -base64 32 | tr '+/' '-_' > .scheduler-key)
+```
+
+Then start the UI:
 
 ```bash
 docker compose --profile ui up -d --wait
 ```
+
+Generate `.scheduler-key` only once, before the first UI startup. Keep it
+private and back it up: changing or losing it makes stored scheduler
+credentials unreadable. The scheduler stores jobs and run history in the
+existing UI volume; scheduled times use UTC.
 
 Open <http://localhost:8080>, enter a local Git identity when prompted, and open
 the server folder `/home/dbtui/git-repos/dbt_test/analytics`. Click **Create
