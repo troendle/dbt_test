@@ -1,0 +1,12 @@
+analytics:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DBT_POSTGRES_HOST', '127.0.0.1') }}"
+      port: 5432
+      user: dbt
+      password: "{{ env_var('DBT_ENV_SECRET_POSTGRES_PASSWORD') }}"
+      dbname: dbt_test
+      schema: analytics
+      threads: 4

@@ -1,0 +1,8 @@
+version: 2
+sources:
+  - name: customer
+    database: dbt_test
+    schema: customer
+    tables:
+      - name: account
+      - name: account_crop
