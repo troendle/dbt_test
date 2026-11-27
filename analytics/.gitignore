@@ -5,3 +5,4 @@ logs/
 .env
 .dbt-ui-venv/
 __pycache__/
+dbt_internal_packages/

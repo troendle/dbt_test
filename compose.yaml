@@ -43,7 +43,7 @@ services:
         exec python main.py
     volumes:
       - dbt_ui_repos:/home/dbtui/git-repos
-      - ./analytics:/home/dbtui/git-repos/analytics
+      - ./:/home/dbtui/git-repos/dbt_test
     secrets:
       - postgres_password
     depends_on:

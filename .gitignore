@@ -2,3 +2,6 @@ data
 docker
 logs
 analytics/.user.yml
+.postgres*
+.venv
+.vscode

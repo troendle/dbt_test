@@ -22,6 +22,18 @@ Anonymous dbt usage reporting is disabled. Credentials are not stored in the
 profile. The database is `dbt_test`, the user is `dbt`, and models are created
 in the `analytics` schema at `127.0.0.1:5432`.
 
+The dbt VS Code extension also reads the password from the private, Git-ignored
+`analytics/.env` file. This is a separate copy: update it when the password
+file changes. The extension also requires
+`DBT_ALLOW_EXPERIMENTAL_ADAPTERS=true` in that file to enable its experimental
+Postgres adapter support and the PostgreSQL client runtime on the Ubuntu host:
+
+```bash
+sudo apt-get install libpq5
+```
+
+Reload VS Code after changing the file.
+
 The first starter model creates two rows with unique, non-null IDs. The second
 references it and selects ID 1. Both models have uniqueness and non-null tests.
 
@@ -55,19 +67,22 @@ docker compose --profile ui up -d --wait
 ```
 
 Open <http://localhost:8080>, enter a local Git identity when prompted, and open
-the server folder `/home/dbtui/git-repos/analytics`. Click **Create virtual
-environment** to install the pinned project dependencies. You can then edit
-models, explore lineage, and run dbt from the browser. No GitHub account or
-remote repository is required.
+the server folder `/home/dbtui/git-repos/dbt_test/analytics`. Click **Create
+virtual environment** to install the pinned project dependencies. You can then
+edit models, explore lineage, and run dbt from the browser. No GitHub account
+or remote repository is required.
 
 The UI creates a personal Git branch and worktree: browser edits are separate
-from the original `analytics` folder in VS Code. Commit browser changes and
-merge your UI branch into `main` to bring them back to the original folder.
-Workspaces and their Python environments persist in a Docker volume.
+from the original `analytics` folder in VS Code. The branch starts from the
+repository's committed HEAD, not uncommitted changes. Commit browser changes and
+merge your UI branch into your working branch to bring them back to the
+original folder. Workspaces and their Python environments persist in a Docker
+volume.
 
 Only the browser port is published, bound to localhost. The backend receives
-the database password from the existing Docker secret. Keep this UI local;
-it has no login configured and can execute project code.
+the database password from the existing Docker secret and can access the entire
+workspace through its bind mount. Keep this UI local; it has no login
+configured and can execute project code.
 
 The backend build uses the Ubuntu host's additional CA certificates from
 `/usr/local/share/ca-certificates` to support this environment's HTTPS proxy
